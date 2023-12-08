@@ -1,18 +1,19 @@
 import argparse
 import pathlib
 import random
-
-from utttpy.game.ultimate_tic_tac_toe import UltimateTicTacToe
+import sys
+sys.path.insert(0, '/home/tanio/nam3/ML/utttai')
 from utttpy.selfplay.monte_carlo_tree_search import (
     MonteCarloTreeSearch,
     serialize_evaluated_state,
     serialize_evaluated_actions,
 )
+from utttpy.game.ultimate_tic_tac_toe import UltimateTicTacToe
 
 
 def run_argparse() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--uttt_state", type=str, required=True)
+    # parser.add_argument("--uttt_state", type=str, required=True)
     parser.add_argument("--num_simulations", type=int, required=True)
     parser.add_argument("--exploration_strength", type=float, required=True)
     parser.add_argument("--random_seed", type=int, required=True)
@@ -27,7 +28,7 @@ def main() -> None:
 
     random.seed(args.random_seed)
 
-    uttt = UltimateTicTacToe(state=bytearray(map(int, args.uttt_state)))
+    uttt = UltimateTicTacToe()
 
     mcts = MonteCarloTreeSearch(
         uttt=uttt.clone(),
