@@ -142,17 +142,19 @@ class UltimateTicTacToe:
     def _update_supergame_result(self, symbol: int, index: int) -> None:
         supergame_updated = False
         subgame = index // 9
-        if self._is_winning_position(symbol=symbol, subgame=subgame):
-            self.state[81 + subgame] = symbol
-            supergame_updated = True
-        elif self._is_full(subgame=subgame):
-            self.state[81 + subgame] = DRAW_STATE_VALUE
-            supergame_updated = True
+        if self.state[81 + subgame]==0:
+            if self._is_winning_position(symbol=symbol, subgame=subgame) :
+                self.state[81 + subgame] = symbol
+                supergame_updated = True
+            elif self._is_full(subgame=subgame):
+                self.state[81 + subgame] = DRAW_STATE_VALUE
+                supergame_updated = True
         if supergame_updated:
             if self._is_winning_position(symbol=symbol, subgame=9):
                 self.state[UTTT_RESULT_STATE_INDEX] = symbol
             elif self._is_full(subgame=9):
                 self.state[UTTT_RESULT_STATE_INDEX] = DRAW_STATE_VALUE
+            
 
     def _toggle_next_symbol(self) -> None:
         if self.is_next_symbol_X():
@@ -162,7 +164,7 @@ class UltimateTicTacToe:
 
     def _set_next_constraint(self, index: int) -> None:
         next_subgame = index % 9
-        if self.state[81 + next_subgame]:
+        if self._is_full(next_subgame):
             self.state[CONSTRAINT_STATE_INDEX] = UNCONSTRAINED_STATE_VALUE
         else:
             self.state[CONSTRAINT_STATE_INDEX] = next_subgame
@@ -190,8 +192,8 @@ class UltimateTicTacToe:
             x_w = self._is_winning_position(symbol=X_STATE_VALUE, subgame=subgame)
             o_w = self._is_winning_position(symbol=O_STATE_VALUE, subgame=subgame)
             full = self._is_full(subgame=subgame)
-            if x_w and o_w:
-                raise UltimateTicTacToeError(f"X and O have winning positions on subgame={subgame}")
+            # if x_w and o_w:
+            #     raise UltimateTicTacToeError(f"X and O have winning positions on subgame={subgame}")
             if x_w and self.state[81 + subgame] != X_STATE_VALUE:
                 raise UltimateTicTacToeError(f"X won subgame={subgame}, but supergame is not updated")
             if o_w and self.state[81 + subgame] != O_STATE_VALUE:
@@ -202,7 +204,7 @@ class UltimateTicTacToe:
     def _verify_constraint(self) -> None:
         if not (self.is_constrained() or self.is_unconstrained()):
             raise UltimateTicTacToeError(f"invalid constraint={self.constraint}")
-        if self.is_constrained() and self.state[81 + self.constraint]:
+        if self.is_constrained() and self._is_full(self.is_constrained()):
             raise UltimateTicTacToeError(f"constraint={self.constraint} points to terminated subgame")
 
     def _verify_action(self, action: Action) -> None:
@@ -215,7 +217,7 @@ class UltimateTicTacToe:
             raise UltimateTicTacToeError(illegal_action + "index outside the valid range")
         if self.is_constrained() and self.constraint != action.index // 9:
             raise UltimateTicTacToeError(illegal_action + f"violated constraint={self.constraint}")
-        if self.state[81 + action.index // 9]:
+        if self._is_full(action.index//9):
             raise UltimateTicTacToeError(illegal_action + "index from terminated subgame")
         if self.state[action.index]:
             raise UltimateTicTacToeError(illegal_action + "index is already taken")
