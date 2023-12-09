@@ -2,7 +2,8 @@ import argparse
 import pathlib
 import random
 import sys
-sys.path.insert(0, '/home/tanio/nam3/ML/utttai')
+# sys.path.insert(0, '/home/tanio/nam3/ML/utttai')
+sys.path.insert(0, '/kaggle/working/utttai')
 from utttpy.selfplay.monte_carlo_tree_search import (
     MonteCarloTreeSearch,
     serialize_evaluated_state,
