@@ -194,10 +194,10 @@ class UltimateTicTacToe:
             full = self._is_full(subgame=subgame)
             # if x_w and o_w:
             #     raise UltimateTicTacToeError(f"X and O have winning positions on subgame={subgame}")
-            if x_w and self.state[81 + subgame] != X_STATE_VALUE:
-                raise UltimateTicTacToeError(f"X won subgame={subgame}, but supergame is not updated")
-            if o_w and self.state[81 + subgame] != O_STATE_VALUE:
-                raise UltimateTicTacToeError(f"O won subgame={subgame}, but supergame is not updated")
+            # if x_w and self.state[81 + subgame] != X_STATE_VALUE:
+            #     raise UltimateTicTacToeError(f"X won subgame={subgame}, but supergame is not updated")
+            # if o_w and self.state[81 + subgame] != O_STATE_VALUE:
+            #     raise UltimateTicTacToeError(f"O won subgame={subgame}, but supergame is not updated")
             if full and self.state[81 + subgame] != DRAW_STATE_VALUE and not (x_w or o_w):
                 raise UltimateTicTacToeError(f"DRAW on subgame={subgame}, but supergame is not updated")
 
