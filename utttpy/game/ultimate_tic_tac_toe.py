@@ -199,6 +199,8 @@ class UltimateTicTacToe:
             # if o_w and self.state[81 + subgame] != O_STATE_VALUE:
             #     raise UltimateTicTacToeError(f"O won subgame={subgame}, but supergame is not updated")
             if full and self.state[81 + subgame] != DRAW_STATE_VALUE and not (x_w or o_w):
+                print(DRAW_STATE_VALUE)
+                print(self.state[81 + subgame])
                 raise UltimateTicTacToeError(f"DRAW on subgame={subgame}, but supergame is not updated")
 
     def _verify_constraint(self) -> None:

@@ -20,7 +20,7 @@ pygame.init()
 screen = pygame.display.set_mode((600, 600))
 pygame.display.set_caption('Ultimate Tic-Tac-Toe')
 
-def draw(state: State):
+def draw(state: State_2):
     screen.fill('white')
         
     for x in range(3):
@@ -120,7 +120,7 @@ def play_step_by_step(player_X, player_O, rule = 1):
                         is_game_done = True
                     
 
-def play_auto(player_X, player_O, rule = 1, first_side = True):
+def play_auto(player_X, player_O, rule = 1):
     player_1 = import_module(player_X)
     player_2 = import_module(player_O)
     if rule == 1:
@@ -141,28 +141,9 @@ def play_auto(player_X, player_O, rule = 1, first_side = True):
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()         
-        result = state.game_result(state.global_cells.reshape(3,3))
-        result_str = ""
+        
         if state.game_over or is_game_done:
-            if not first_side:
-                if result == 1:
-                    result_str = "You lose!"
-                if result == -1:
-                    result_str = "You win!"
-                if result == 3:
-                    result_str = "You draw!"
-            else:
-                if result == -1:
-                    result_str = "You lose!"
-                if result == 1:
-                    result_str = "You win!"
-                if result == 3:
-                    result_str = "You draw!"
-
-            print(result_str)              
-            pygame.quit()
-            sys.exit()     
-                
+            continue
 
         start_t = time.time()
         if state.player_to_move == 1:
@@ -181,77 +162,7 @@ def play_auto(player_X, player_O, rule = 1, first_side = True):
         
         state.act_move(new_move)
         turn += 1
-         
-import time
+    
 
-
-def play_multiple_games(player_X, player_O, rule=1, first_side=True, num_games=3):
-    for game_num in range(1, num_games + 1):
-        print(f"\nGame {game_num} started!\n")
-        
-        player_1 = import_module(player_X)
-        player_2 = import_module(player_O)
-        
-        if rule == 1:
-            state = State()
-        else:
-            state = State_2()
-        
-        turn = 0
-        remain_time_X = 120
-        remain_time_O = 120
-        is_game_done = False
-        
-        while True:
-            draw(state)
-            
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    pygame.quit()
-                    sys.exit()
-            
-            result = state.game_result(state.global_cells.reshape(3, 3))
-            result_str = ""
-            
-            if state.game_over or is_game_done:
-                if not first_side:
-                    if result == 1:
-                        result_str = "You lose!"
-                    if result == -1:
-                        result_str = "You win!"
-                    if result == 3:
-                        result_str = "You draw!"
-                else:
-                    if result == -1:
-                        result_str = "You lose!"
-                    if result == 1:
-                        result_str = "You win!"
-                    if result == 3:
-                        result_str = "You draw!"
-
-                print(result_str)
-                time.sleep(2)  # Add a delay between games
-                break
-
-            start_t = time.time()
-            if state.player_to_move == 1:
-                new_move = player_1.select_move(state, remain_time_X)
-                elapsed_time = time.time() - start_t
-                remain_time_X -= elapsed_time
-            else:
-                new_move = player_2.select_move(state, remain_time_O)
-                elapsed_time = time.time() - start_t
-                remain_time_O -= elapsed_time
-
-            if elapsed_time > 10 or not new_move or (remain_time_O < -0.1) or (remain_time_X < -0.1):
-                is_game_done = True
-                continue
-
-            state.act_move(new_move)
-            turn += 1
-
-play_multiple_games('random_agent', '_MSSV', first_side=False, num_games=5)
-play_multiple_games('_MSSV', 'random_agent', first_side=True, num_games=5)
-
-
+play_auto('random_agent', '_2110541_2112378_2110193')
 # play_step_by_step('random_agent', '_MSSV')

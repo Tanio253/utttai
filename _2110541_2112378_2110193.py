@@ -14,19 +14,31 @@ def convert_to_uttt_index(li):
             res_list.append(2)
             continue
         res_list.append(l)
-    return res_list        
+    return res_list
+         
 
 def convert_to_uttt_format(cur_state):
     global_cells = cur_state.global_cells.copy()
+    for i in range(9):
+        if cur_state.game_result(cur_state.blocks[i])==0:
+            cur_state.global_cells[i] = 3
     global_cells = convert_to_uttt_index(global_cells)
     blocks = [x for block in cur_state.blocks for b in block for x in b]
     blocks = convert_to_uttt_index(blocks)
-    player_to_move = 1 if cur_state.player_to_move==1 else 2 
+    player_to_move = 1 if cur_state.player_to_move==1 else 2
     constraint_index = cur_state.previous_move.x*3 + cur_state.previous_move.y if cur_state.previous_move is not None else 9
     global_constraint_index = constraint_index*9
     if constraint_index < 9 and all(b!=0 for b in blocks[global_constraint_index: global_constraint_index + 9]):
         constraint_index = 9
-    result = cur_state.game_result(cur_state.global_cells.reshape(3, 3))
+    if cur_state.game_result(cur_state.global_cells.reshape(3, 3)) == 1:
+        result = 1
+    elif cur_state.game_result(cur_state.global_cells.reshape(3, 3)) == -1:
+        result = 2
+    elif cur_state.game_result(cur_state.global_cells.reshape(3, 3)) == 0:
+        result = 3
+    else:
+        result = None
+    # result = cur_state.game_result(cur_state.global_cells.reshape(3, 3))
     uttt_state = blocks.copy()
     uttt_state.extend(global_cells)
     uttt_state.extend([player_to_move])
@@ -38,7 +50,11 @@ def convert_to_uttt_format(cur_state):
 def select_move(cur_state, remain_time):
     #Convert to uttt format
     uttt = convert_to_uttt_format(cur_state)
-    mcts = MonteCarloTreeSearch(uttt, num_simulations=1000, exploration_strength=1.0)
+    if uttt.state[91]==9:
+        cur_state.free_move = True
+    else:
+        cur_state.free_move = False
+    mcts = MonteCarloTreeSearch(uttt, num_simulations=10000, exploration_strength=1.0)
     mcts.run()
     #Evaluate action
     evaluated_actions = mcts.get_evaluated_actions()
@@ -54,6 +70,7 @@ def select_move(cur_state, remain_time):
         y_coordinate=y,
         value= cur_state.player_to_move
     )
+    
 
     return move
 

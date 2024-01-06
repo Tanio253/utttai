@@ -69,7 +69,7 @@ class State:
             return self.O
         
         if np.all(board != 0):
-            return 3.
+            return 0.
         
         # if not over
         return None
@@ -115,8 +115,6 @@ class State:
     
     def is_valid_move(self, move: UltimateTTT_Move):            
         if move.value != self.player_to_move:
-            print(move.value)
-            print(self.player_to_move)
             return False
         
         if move.x not in range(3) or move.y not in range(3):
@@ -154,6 +152,7 @@ class State:
     @property
     def count_O(self):
         return len((np.where(self.global_cells == -1))[0])
+        
   
 class State_2(State):
     def __init__(self, state = None):
